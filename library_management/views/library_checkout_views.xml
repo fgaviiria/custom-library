@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_library_checkout_list" model="ir.ui.view">
+        <field name="name">library.checkout.list</field>
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="book_id"/>
+                <field name="member_id"/>
+                <field name="checkout_date"/>
+                <field name="return_date"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_library_checkout_form" model="ir.ui.view">
+        <field name="name">library.checkout.form</field>
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_return_book"
+                        string="Return"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="state == 'returned'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="book_id" readonly="state == 'returned'"/>
+                            <field name="member_id" readonly="state == 'returned'"/>
+                        </group>
+                        <group>
+                            <field name="checkout_date" readonly="state == 'returned'"/>
+                            <field name="return_date" readonly="state == 'returned'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_library_checkout_search" model="ir.ui.view">
+        <field name="name">library.checkout.search</field>
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="book_id"/>
+                <field name="member_id"/>
+                <filter string="On Loan" name="On Loan" domain="[('state', '=', 'on_loan')]"/>
+                <filter string="Returned" name="Returned" domain="[('state', '=', 'returned')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Book" name="group_book" context="{'group_by': 'book_id'}"/>
+                    <filter string="Member" name="group_member" context="{'group_by': 'member_id'}"/>
+                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_library_checkout" model="ir.actions.act_window">
+        <field name="name">Checkouts</field>
+        <field name="res_model">library.checkout</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first checkout
+            </p>
+        </field>
+    </record>
+</odoo>

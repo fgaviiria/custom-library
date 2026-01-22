@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_library_book_list" model="ir.ui.view">
+        <field name="name">library.book.list</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="author"/>
+                <field name="isbn"/>
+                <field name="publication_date"/>
+                <field name="is_available"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_library_book_form" model="ir.ui.view">
+        <field name="name">library.book.form</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_fetch_book_data"
+                            string="Search ISBN"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="not isbn"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="author"/>
+                            <field name="isbn"/>
+                        </group>
+                        <group>
+                            <field name="publication_date"/>
+                            <field name="is_available" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="History">
+                            <field name="checkout_ids" readonly="1">
+                                <list decoration-muted="state=='returned'" decoration-info="state=='on_loan'">
+                                    <field name="member_id"/>
+                                    <field name="checkout_date"/>
+                                    <field name="return_date"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_library_book_search" model="ir.ui.view">
+        <field name="name">library.book.search</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="author"/>
+                <field name="isbn"/>
+                <filter string="Available" name="available" domain="[('is_available', '=', True)]"/>
+                <filter string="Not Available" name="not_available" domain="[('is_available', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Author" name="group_author" context="{'group_by': 'author'}"/>
+                    <filter string="Availability" name="group_availability" context="{'group_by': 'is_available'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_library_book" model="ir.actions.act_window">
+        <field name="name">Books</field>
+        <field name="res_model">library.book</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first book
+            </p>
+        </field>
+    </record>
+</odoo>
